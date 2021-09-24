@@ -18,7 +18,7 @@ class FlaskTests(TestCase):
         self.client = app.test_client()
         app.config['TESTING'] = True
         # Connect to test database
-        connect_to_db(app, True)
+        connect_to_db(app)
 
         # Create tables and add sample data
         db.create_all()
@@ -106,4 +106,3 @@ if __name__ == "__main__":
     with open(log_file, "w") as f:
         runner = unittest.TextTestRunner(f)
         unittest.main(testRunner=runner)
-
