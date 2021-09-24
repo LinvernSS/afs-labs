@@ -291,7 +291,8 @@ def connect_to_db(app, test=False):
         database = 'postgresql://' + os.environ["POSTGRES_USER"] + ':' + os.environ["POSTGRES_PASSWORD"] + '@' + \
                    os.environ["DB_SERVICE_SERVICE_HOST"] + ':' + os.environ["DB_SERVICE_PORT_5432_TCP_PORT"] + '/shop'
     else:
-        database = 'postgresql://' + os.environ["POSTGRES_USER"] + ':' + os.environ["POSTGRES_PASSWORD"] + '@postgres-db:5432/shop'
+        database = 'postgresql://' + os.environ["POSTGRES_USER"] + ':' + os.environ["POSTGRES_PASSWORD"] + '@' + \
+                   os.environ["DB_CONTAINER_NAME"] + ':5432/shop'
     """Connect the database to Flask app."""
 
     # Configure to use PostgreSQL database
