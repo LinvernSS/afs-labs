@@ -18,7 +18,7 @@ class TestName(unittest.TestCase):
         # Create tables and add sample data
         model.db.create_all()
         model.example_data()
-        self.cart = model.Product.query.filter(model.Product.product_id.in_(flask.session['cart'].keys())).all()
+        self.cart = model.Product.query.filter(model.Product.product_id.in_(1)).all()
         pass
 
     def tearDown(self):
