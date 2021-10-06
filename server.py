@@ -283,7 +283,7 @@ def save_recipe():
     recipe = request.json.get('recipe')
     print(recipe)
     customer_id = db.session.query(Customer.user_id).filter(Customer.email == session['email'])
-    recipe_id = db.session.query(Recipe.recipe_id).filter(Recipe.url == recipe['url'.encode('utf-8')]).first()
+    recipe_id = db.session.query(Recipe.recipe_id).filter(Recipe.url == recipe['url']).first()
     if not recipe_id:
         new_recipe = Recipe(url=recipe['url'.encode('utf-8')],
                             name=recipe['name'.encode('utf-8')],
@@ -291,7 +291,7 @@ def save_recipe():
                             img=recipe['image'.encode('utf-8')])
         db.session.add(new_recipe)
         db.session.commit()
-        recipe_id = db.session.query(Recipe.recipe_id).filter(Recipe.url == recipe['url'.encode('utf-8')]).first()
+        recipe_id = db.session.query(Recipe.recipe_id).filter(Recipe.url == recipe['url']).first()
 
     customer_recipe = Customer_Recipe(customer_id=customer_id, recipe_id=recipe_id)
 
