@@ -86,7 +86,7 @@ class FlaskTests(unittest.TestCase):
 
         self.assertIn(b"Blackberries", result.data)
 
-        result = self.client.post('/products/1', data={'productId': '1'}, follow_redirects=True)
+        result = self.client.post('/products/1', data={'productId': 1}, follow_redirects=True)
         self.assertIn(b'Blackberries', result.data)
 
     def test_cart_page(self):
@@ -97,9 +97,9 @@ class FlaskTests(unittest.TestCase):
         self.assertIn(b"Shopping Cart", result.data)
 
         result = self.client.post('/cart',
-                                  data=json.dumps({'delivery': 'delivery',
-                                                   'address': {'street': '1234 Main Street',
-                                                               'zipcode': '31626'}}),
+                                  json={'delivery': 'delivery',
+                                        'address': {'street': '1234 Main Street',
+                                                    'zipcode': '31626'}},
                                   follow_redirects=True)
         self.assertIn(b'Success', result.data)
 
@@ -119,18 +119,20 @@ class FlaskTests(unittest.TestCase):
 
     def test_save_recipe(self):
         result = self.client.post('/save-recipe',
-                                  data=json.dumps({'url': 'http://foodandstyle.com/2012/12/20/persimmon-cosmopolitan/'}),
+                                  json={'url': 'http://foodandstyle.com/2012/12/20/persimmon-cosmopolitan/'},
                                   follow_redirects=True)
         self.assertIn(b'Success', result.data)
 
     def test_update_cart(self):
-        result = self.client.post('/add-item', data=json.dumps({'product_id': 1}), follow_redirects=True)
+        result = self.client.post('/add-item', json={'product_id': 1}, follow_redirects=True)
         self.assertIn(b'Success!', result.data)
 
-        result = self.client.post('/update-cart', data=json.dumps({'product_id': 1, 'qty': 3}), follow_redirects=True)
+        result = self.client.post('/update-cart', json={'product_id': 1, 'qty': 3}, follow_redirects=True)
         self.assertIn(b'Success', result.data)
 
     def test_checkout(self):
+        self.client.session['cart']['1'] = 1
+
         result = self.client.get('/checkout')
         self.assertIn(b'Thank you', result.data)
 
