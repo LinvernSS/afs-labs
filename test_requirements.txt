@@ -1,3 +1,4 @@
-Flask==2.00
 arrow==0.8.0
+Flask==2.00
+Flask-SQLAlchemy==2.5.1
 stripe==1.41.1

@@ -3,8 +3,7 @@ import os
 import sys
 from server import app
 from model import connect_to_db, db, example_data, Product
-import functions
-
+import json
 
 current = os.getcwd()
 current = current.split("/")
@@ -54,9 +53,13 @@ class FlaskTests(unittest.TestCase):
                                  data={"email": "Jane@jane.com", "password": "password"},
                                  follow_redirects=True)
         self.assertIn(b"Success", login.data)
+
         logged_in = self.client.get("/products")
         self.assertIn(b"Account", logged_in.data)
         self.assertIn(b"Log Out", logged_in.data)
+
+        result = self.client.get('/account')
+        self.assertIn(b'Jane Doe', result.data)
 
         logout = self.client.get("/logout", follow_redirects=True)
         self.assertNotIn(b"Account", logout.data)
@@ -83,7 +86,7 @@ class FlaskTests(unittest.TestCase):
 
         self.assertIn(b"Blackberries", result.data)
 
-        result = self.client.post('/products/1', data={'productID': '1'}, follow_redirects=True)
+        result = self.client.post('/products/1', data={'productId': '1'}, follow_redirects=True)
         self.assertIn(b'Blackberries', result.data)
 
     def test_cart_page(self):
@@ -94,9 +97,9 @@ class FlaskTests(unittest.TestCase):
         self.assertIn(b"Shopping Cart", result.data)
 
         result = self.client.post('/cart',
-                                  data={'delivery': 'delivery',
-                                        'address': {'street': '1234 Main Street',
-                                                    'zipcode': '31626'}},
+                                  data=json.dumps({'delivery': 'delivery',
+                                                   'address': {'street': '1234 Main Street',
+                                                               'zipcode': '31626'}}),
                                   follow_redirects=True)
         self.assertIn(b'Success', result.data)
 
@@ -114,14 +117,17 @@ class FlaskTests(unittest.TestCase):
 
         self.assertIn(b"Organic Blackberries", result.data)
 
-    def test_account(self):
-        result = self.client.get('/account')
-        self.assertIn(b'Jane Doe', result.data)
-
     def test_save_recipe(self):
         result = self.client.post('/save-recipe',
-                                  data={'url': 'http://foodandstyle.com/2012/12/20/persimmon-cosmopolitan/'},
+                                  data=json.dumps({'url': 'http://foodandstyle.com/2012/12/20/persimmon-cosmopolitan/'}),
                                   follow_redirects=True)
+        self.assertIn(b'Success', result.data)
+
+    def test_update_cart(self):
+        result = self.client.post('/add-item', data=json.dumps({'product_id': 1}), follow_redirects=True)
+        self.assertIn(b'Success!', result.data)
+
+        result = self.client.post('/update-cart', data=json.dumps({'product_id': 1, 'qty': 3}), follow_redirects=True)
         self.assertIn(b'Success', result.data)
 
     def test_checkout(self):
@@ -130,17 +136,6 @@ class FlaskTests(unittest.TestCase):
 
         result = self.client.post('/checkout')
         self.assertIn(b'Your order has been placed!', result.data)
-
-    def test_update_cart(self):
-        result = self.client.post('/add-item', data={'product_id': 1}, follow_redirects=True)
-        self.assertIn(b'Success!', result.data)
-
-        result = self.client.post('/update-cart', data={'product_id': 1, 'qty': 3})
-        self.assertIn(b'Success', result.data)
-
-    def test_functions(self):
-        self.assertEqual(functions.get_cart_weight(self.cart), 6)
-        self.assertEqual(functions.get_cart_total(self.cart), 3.99)
 
 
 if __name__ == "__main__":
