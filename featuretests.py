@@ -49,11 +49,6 @@ class FlaskTests(unittest.TestCase):
         self.assertIn(b"Account", logged_in.data)
         self.assertIn(b"Log Out", logged_in.data)
 
-        result = self.client.post('/save-recipe',
-                                  json={'recipe': {'url': 'http://foodandstyle.com/2012/12/20/persimmon-cosmopolitan/'}},
-                                  follow_redirects=True)
-        self.assertIn(b'Success', result.data)
-
         result = self.client.get('/account')
         self.assertIn(b'Jane Doe', result.data)
 
