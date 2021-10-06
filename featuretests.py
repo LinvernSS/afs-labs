@@ -50,7 +50,7 @@ class FlaskTests(unittest.TestCase):
         self.assertIn(b"Log Out", logged_in.data)
 
         result = self.client.post('/save-recipe',
-                                  json={'url': 'http://foodandstyle.com/2012/12/20/persimmon-cosmopolitan/'},
+                                  json={'recipe': {'url': 'http://foodandstyle.com/2012/12/20/persimmon-cosmopolitan/'}},
                                   follow_redirects=True)
         self.assertIn(b'Success', result.data)
 
@@ -110,6 +110,9 @@ class FlaskTests(unittest.TestCase):
         result = self.client.get('/checkout')
         self.assertIn(b'Thank you', result.data)
 
+        self.client.post("/login",
+                         data={"email": "Jane@jane.com", "password": "password"},
+                         follow_redirects=True)
         result = self.client.post('/checkout')
         self.assertIn(b'Your order has been placed!', result.data)
 
