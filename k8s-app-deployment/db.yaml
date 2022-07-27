@@ -26,7 +26,7 @@ spec:
       - envFrom:
           - secretRef:
               name: db-setup
-        image: harbor.dev.afsmtddso.com/devsecops-lab/db:f4cff0e-80d21f9
+        image: harbor.dev.afsmtddso.com/camellia-harbor-project/db:49d0fd3-a62dd3f
         imagePullPolicy: Always
         name: db
         ports:

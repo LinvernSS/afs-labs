@@ -4,12 +4,12 @@ kind: ClusterConfig
 metadata:
   name: DevSecOps-Labs-Cluster
   region: us-east-2
-  version: "1.21"
+  version: "1.22"
 
 managedNodeGroups:
   - name: managed-ng-1
-    instanceType: t2.medium
+    instanceType: t2.large
     minSize: 1
-    maxSize: 3
-    desiredCapacity: 1
-    volumeSize: 12
+    maxSize: 4
+    desiredCapacity: 4
+    volumeSize: 16
